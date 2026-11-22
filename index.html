@@ -292,11 +292,11 @@ function sums(a,b,br){const out=[];out.ng=[];const go=(cur,used,seen,s,n)=>{if(P
  br.forEach((p,i)=>{if(used.includes(i))return;[[p[0],p[1]],[p[1],p[0]]].forEach(([x,y])=>{if(POS[x][0]==POS[cur][0]&&!seen.includes(POS[y][0]))go(y,used.concat(i),seen.concat(POS[y][0]),s+POS[x][1]-POS[cur][1],n+(POS[x][1]<POS[cur][1]))})})};go(a,[],[POS[a][0]],0,0);return out}
 const cp=[];TL.forEach((x,i)=>TL.slice(i+1).forEach(y=>{if(POS[x][0]!=POS[y][0])cp.push([x,y])}));
 function solve(v){const r=[];TL.forEach(a=>TL.forEach(b=>{if(a==b)return;const t=br=>{const al=[a,b].concat(br.flat());if(new Set(al).size==al.length){const q=sums(a,b,br),m=Math.min(99,...q.map((z,i)=>z==v?q.ng[i]:99));if(m<99)r.push({a,b,br,ng:m})}};t([]);cp.forEach((p,i)=>{t([p]);for(let j=i+1;j<cp.length;j++)t([p,cp[j]])})}));return r.sort((x,y)=>(TL.indexOf(x.a)>TL.indexOf(x.b))-(TL.indexOf(y.a)>TL.indexOf(y.b))||x.ng-y.ng||x.br.length-y.br.length)}
-const sp=document.createElement('div');sp.className='part';sp.innerHTML='<input id="k_tgt" placeholder="Valeur recherchée" autocomplete="off"><div id="k_sol" style="margin-top:8px;font-size:.9rem"></div>';$('t3').appendChild(sp);
+const sp=document.createElement('div');sp.className='part';sp.innerHTML='<input id="k_tgt" inputmode="numeric" placeholder="Valeur recherchée" autocomplete="off"><div id="k_sol" style="margin-top:8px;font-size:.9rem"></div>';$('t3').appendChild(sp);
 const wA=document.createElement('div'),wB=document.createElement('div');wA.className=wB.className='wr';[...$('t3').children].forEach(c=>(c===sp?wB:wA).appendChild(c));$('t3').append(wA,wB);
 const wM=document.createElement('div');wM.className='wr';while($('t2').firstChild)wM.appendChild($('t2').firstChild);
 $('t5').append(wM,wA,wB);SUB.t5=[['mb','Méthode "B"'],['bo','KCA - bornes'],['kca','KCA']];initSub('t5');
-$('k_tgt').oninput=()=>{const v=parseInt($('k_tgt').value),o=$('k_sol');if(isNaN(v)){o.textContent='';return}const r=solve(v);
+$('k_tgt').oninput=()=>{const t=$('k_tgt');let q=t.value.replace(/\D/g,'');while(q&&+q>180)q=q.slice(0,-1);t.value=q;const v=parseInt(q),o=$('k_sol');if(isNaN(v)){o.textContent='';return}const r=solve(v);
  o.innerHTML=r.length?'<div>'+r.length+' solution(s), les plus simples d’abord :</div>'+r.slice(0,10).map(s=>'<div>Condensateur '+s.a+' → '+s.b+(s.br.length?' · ponts '+s.br.map(p=>p.join('–')).join(', '):' · sans pont')+'</div>').join(''):'Aucune solution.'};
 document.addEventListener('change',calcK);
 const KM={r_c1:'k_c1',r_c2:'k_c2',r_l1a:'k_p1a',r_l1b:'k_p1b',r_l2a:'k_p2a',r_l2b:'k_p2b'};
