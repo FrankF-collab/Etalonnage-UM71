@@ -114,7 +114,7 @@ function paintSame(){[['km','kb'],['pm','pb']].forEach(([m,b])=>['krv',1,2,3,4,5
 function refresh(){applyKRV();paintSame();const pi=piOn();document.querySelectorAll('.pi').forEach(e=>e.style.display=pi?'':'none');
  document.querySelectorAll('.mb').forEach(e=>{e.style.display=gq(e.dataset.for).checked?'':'none'});
  document.querySelectorAll('.sel').forEach(s=>{s.querySelector('.v').textContent=s.querySelector('select').value});$('rgcB').style.display=gq('m_mb').checked?'':'none';$('rgpB').style.display=gq('m_pi_mb').checked?'':'none';
- ['kb','km','pb','pm'].forEach(p=>{const v=[1,2,3,4,5,6].map(i=>gq(p+'_'+i)),n=v.map(e=>e.value).filter(Boolean),d=new Set(n).size<n.length;v.forEach(e=>e.classList.toggle('dup',d))});
+ ['kb','km','pb','pm'].forEach(p=>{const v=[1,2,3,4,5,6].map(i=>gq(p+'_'+i)),n=v.map(e=>e.value).filter(x=>x&&x!=='/'),d=new Set(n).size<n.length;v.forEach(e=>e.classList.toggle('dup',d))});
  ['t0','t1'].forEach(t=>{if(!pi&&$(t).dataset.cur=='pi')subshow(t,SUB[t][0][0])})}
 function calcB(){const el=['b_kb','b_ub','b_kf','b_uf'].map(k=>gq(k));
  el.forEach(e=>{if(e.dataset.auto){e.value='';delete e.dataset.auto;e.classList.remove('auto')}});
@@ -299,11 +299,11 @@ $('t5').append(wM,wA,wB);SUB.t5=[['mb','Méthode "B"'],['bo','KCA - bornes'],['k
 $('k_tgt').oninput=()=>{const t=$('k_tgt');let q=t.value.replace(/\D/g,'');while(q&&+q>180)q=q.slice(0,-1);t.value=q;const v=parseInt(q),o=$('k_sol');if(isNaN(v)){o.textContent='';return}const r=solve(v);
  o.innerHTML=r.length?'<div>'+r.length+' solution(s), les plus simples d’abord :</div>'+r.slice(0,10).map(s=>'<div>Condensateur '+s.a+' → '+s.b+(s.br.length?' · ponts '+s.br.map(p=>p.join('–')).join(', '):' · sans pont')+'</div>').join(''):'Aucune solution.'};
 document.addEventListener('change',calcK);
-const KM={r_c1:'k_c1',r_c2:'k_c2',r_l1a:'k_p1a',r_l1b:'k_p1b',r_l2a:'k_p2a',r_l2b:'k_p2b'};
+const KM={r_c1:'k_c1',r_c2:'k_c2',r_l1a:'k_p1a',r_l2a:'k_p1b',r_l1b:'k_p2a',r_l2b:'k_p2b'};
 function syncKR(dir,clr){if(dir=='r')Object.entries(KM).forEach(([r,k])=>{const v=gq(r).value;gq(k).value=[...gq(k).options].some(o=>o.text===v)?v:''});
  else Object.entries(KM).forEach(([r,k])=>gq(r).value=gq(k).value);
  calcK();const v=$('k_res').value;if(/^-?\d+$/.test(v)&&+v<=180)gq('r_kca').value=v;else if(clr)gq('r_kca').value=''}
-function loadSync(){if(Object.values(KM).some(k=>gq(k).value))syncKR('k');else if(Object.keys(KM).some(r=>gq(r).value))syncKR('r')}
+function loadSync(){if(Object.keys(KM).some(r=>gq(r).value))syncKR('r');else if(Object.values(KM).some(k=>gq(k).value))syncKR('k')}
 document.addEventListener('change',e=>{const k=(e.target.dataset||{}).k||'';if(/^k_(c|p)/.test(k))syncKR('k',1);else if(KM[k])syncKR('r');store.set('draft',JSON.stringify(gather()))});
 inputs().forEach(e=>{if(NUMK(e.dataset.k))e.setAttribute('inputmode','decimal')});
 try{fill(JSON.parse(store.get('draft')||'{}'))}catch(e){fill({})}
